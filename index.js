@@ -1,8 +1,32 @@
-//express 모듈 추가
+//express,mongoose,dotenv,util 모듈 추가
 const express = require("express");
+const mongoose = require("mongoose");
+const dotenv = require("dotenv");
+
+//dotenv 사용
+dotenv.config();
 
 //express 사용
 const app = express();
+
+//MongoDB 사용
+const MONGO_DB = process.env.MONGO_DB;
+
+//mongoose 세팅
+mongoose.connect(MONGO_DB);
+
+//db 연결
+const db = mongoose.connection;
+
+//연결 성공시 로깅
+db.once('open', function(){
+    console.log('DB Connected');
+})
+
+//연결 실패시 로깅 및 에러처리
+db.on('error', function(err){
+    console.log('DB ERROR : ', err);
+})
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true}));
